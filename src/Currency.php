@@ -86,12 +86,16 @@ class Currency
             return null;
         }
 
-        // Convert amount
-        if ($from === $to) {
-            $value = $amount;
-        }
-        else {
-            $value = ($amount * $to_rate) / $from_rate;
+        try {
+            // Convert amount
+            if ($from === $to) {
+                $value = $amount;
+            } else {
+                $value = ($amount * $to_rate) / $from_rate;
+            }
+        } catch (\Exception $e) {
+            // Prevent invalid conversion or division by zero errors
+            return null;
         }
 
         // Should the result be formatted?
@@ -110,7 +114,7 @@ class Currency
      * @param string $code
      * @param bool   $include_symbol
      *
-     * @return string
+     * @return string|null
      */
     public function format($value, $code = null, $include_symbol = true)
     {
